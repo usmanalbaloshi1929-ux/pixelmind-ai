@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://usmanalbaloshi1929-ux.github.io/pixelmind-ai/sitemap.xml
