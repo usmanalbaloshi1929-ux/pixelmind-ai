@@ -1704,24 +1704,46 @@ function removePreview(){
    GENERATOR
 ========================= */
 
-function generateImage(){
 
+async function generateImage(){
     const prompt = document.getElementById("prompt").value.trim();
 
     if(!prompt){
-
         toast("Please describe the image first.");
-
         document.getElementById("prompt").focus();
-
         return;
     }
 
-    toast("AI Generator is ready. Connect your AI API to generate the image.");
+    toast("Generating image...");
 
+    try {
+        const response = await fetch("/api/generate-image", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ prompt: prompt })
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(data.error || "Image generation failed.");
+        }
+
+        if(data.image){
+            document.getElementById("previewImage").src = data.image;
+            document.getElementById("previewBox").style.display = "block";
+            toast("Image generated successfully!");
+        } else {
+            throw new Error("No image was returned.");
+        }
+
+    } catch(error) {
+        console.error(error);
+        toast("Error: " + error.message);
+    }
 }
-
-
 /* =========================
    IMAGE TOOLS
 ========================= */
